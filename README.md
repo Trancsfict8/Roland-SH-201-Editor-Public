@@ -1,5 +1,7 @@
 # Roland SH-201 Editor
 
+![Roland SH-201 Editor](readme%20pics/Main%20Plugin%20UI%20Screenshot.png)
+
 ![Roland SH-201](https://img.shields.io/badge/Roland-SH--201-00e5ff?style=for-the-badge&labelColor=11141a)
 ![VST3](https://img.shields.io/badge/Plugin-VST3%20%7C%20Standalone-00e5ff?style=for-the-badge&labelColor=11141a)
 ![JUCE 8](https://img.shields.io/badge/Framework-JUCE%208-00e5ff?style=for-the-badge&labelColor=11141a)
