@@ -1,0 +1,18 @@
+﻿# Build directories
+build/
+cmake-build-*/
+out/
+bin/
+
+# IDEs and Visual Studio
+.vs/
+*.user
+*.suo
+*.sln.docstates
+*.log
+*.tlog
+*.pdb
+
+# OS generated files
+.DS_Store
+Thumbs.db
