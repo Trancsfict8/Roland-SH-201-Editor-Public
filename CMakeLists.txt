@@ -12,12 +12,26 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(JUCE)
 
-# Setup libusb from third_party
-set(LIBUSB_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/third_party/libusb/include")
-if(CMAKE_SIZEOF_VOID_P EQUAL 8)
-    set(LIBUSB_LIBRARY "${CMAKE_CURRENT_SOURCE_DIR}/third_party/libusb/VS2019/MS64/static/libusb-1.0.lib")
+# Setup libusb
+if(WIN32)
+    set(LIBUSB_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/third_party/libusb/include")
+
+    if(CMAKE_SIZEOF_VOID_P EQUAL 8)
+        set(LIBUSB_LIBRARY "${CMAKE_CURRENT_SOURCE_DIR}/third_party/libusb/VS2019/MS64/static/libusb-1.0.lib")
+    else()
+        set(LIBUSB_LIBRARY "${CMAKE_CURRENT_SOURCE_DIR}/third_party/libusb/VS2019/MS32/static/libusb-1.0.lib")
+    endif()
+
+elseif(APPLE)
+    find_package(PkgConfig REQUIRED)
+    pkg_check_modules(LIBUSB REQUIRED IMPORTED_TARGET libusb-1.0)
+endif()
+
+# Plugin formats
+if(APPLE)
+    set(PLUGIN_FORMATS AU VST3 Standalone)
 else()
-    set(LIBUSB_LIBRARY "${CMAKE_CURRENT_SOURCE_DIR}/third_party/libusb/VS2019/MS32/static/libusb-1.0.lib")
+    set(PLUGIN_FORMATS VST3 Standalone)
 endif()
 
 juce_add_plugin(SH201Editor
@@ -32,7 +46,7 @@ juce_add_plugin(SH201Editor
     COPY_PLUGIN_AFTER_BUILD FALSE
     PLUGIN_MANUFACTURER_CODE Rold
     PLUGIN_CODE S201
-    FORMATS VST3 Standalone
+    FORMATS ${PLUGIN_FORMATS}
     PRODUCT_NAME "Roland SH-201 Editor"
 )
 
@@ -68,12 +82,16 @@ target_include_directories(SH201Editor
 
 target_compile_definitions(SH201Editor
     PUBLIC
-        NOMINMAX
-        WIN32_LEAN_AND_MEAN
         JUCE_WEB_BROWSER=0
         JUCE_USE_CURL=0
         JUCE_VST3_CAN_REPLACE_VST2=0
 )
+
+if(WIN32)
+    target_compile_definitions(SH201Editor
+        PUBLIC NOMINMAX WIN32_LEAN_AND_MEAN
+    )
+endif()
 
 target_link_libraries(SH201Editor
     PRIVATE
@@ -82,9 +100,20 @@ target_link_libraries(SH201Editor
         juce::juce_audio_processors
         juce::juce_gui_basics
         juce::juce_gui_extra
-        ${LIBUSB_LIBRARY}
-        setupapi
-        advapi32
-        user32
         SH201Assets
 )
+
+if(WIN32)
+    target_link_libraries(SH201Editor
+        PRIVATE
+            ${LIBUSB_LIBRARY}
+            setupapi
+            advapi32
+            user32
+    )
+elseif(APPLE)
+    target_link_libraries(SH201Editor
+        PRIVATE
+            PkgConfig::LIBUSB
+    )
+endif()
