@@ -25,20 +25,20 @@ PatchBrowserComponent::PatchBrowserComponent (SH201AudioProcessor& p, juce::Look
     addAndMakeVisible (*fileList);
 
     titleLabel.setText ("PATCH BROWSER & PRESET MANAGER", juce::dontSendNotification);
-    titleLabel.setFont (juce::Font ("Segoe UI", 16.0f, juce::Font::bold));
+    titleLabel.setFont (juce::Font (juce::FontOptions ("Segoe UI", 16.0f, juce::Font::bold)));
     titleLabel.setColour (juce::Label::textColourId, juce::Colour (0xff00e5ff));
     addAndMakeVisible (titleLabel);
 
     pathLabel.setText ("CURRENT FOLDER:  " + currentFolder.getFullPathName(), juce::dontSendNotification);
-    pathLabel.setFont (juce::Font ("Segoe UI", 15.0f, juce::Font::bold));
+    pathLabel.setFont (juce::Font (juce::FontOptions ("Segoe UI", 15.0f, juce::Font::bold)));
     pathLabel.setColour (juce::Label::textColourId, juce::Colour (0xffffffff));
     addAndMakeVisible (pathLabel);
 
-    targetToneBadge.setFont (juce::Font ("Segoe UI", 12.0f, juce::Font::bold));
+    targetToneBadge.setFont (juce::Font (juce::FontOptions ("Segoe UI", 12.0f, juce::Font::bold)));
     targetToneBadge.setJustificationType (juce::Justification::centredLeft);
     addAndMakeVisible (targetToneBadge);
 
-    statusLabel.setFont (juce::Font ("Segoe UI", 12.0f, juce::Font::plain));
+    statusLabel.setFont (juce::Font (juce::FontOptions ("Segoe UI", 12.0f, juce::Font::bold)));
     statusLabel.setColour (juce::Label::textColourId, juce::Colours::white);
     addAndMakeVisible (statusLabel);
 

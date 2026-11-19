@@ -24,7 +24,7 @@ public:
             l->setText (name, juce::dontSendNotification);
             l->setColour (juce::Label::textColourId, juce::Colours::white);
             l->setJustificationType (juce::Justification::centred);
-            l->setFont (juce::Font ("Segoe UI", 11.0f, juce::Font::bold));
+            l->setFont (juce::Font (juce::FontOptions ("Segoe UI", 11.0f, juce::Font::bold)));
             addAndMakeVisible (l);
             
             sliderAttachments.add (new juce::AudioProcessorValueTreeState::SliderAttachment (p.getAPVTS(), paramId, *s));
@@ -45,7 +45,7 @@ public:
             l->setText (name, juce::dontSendNotification);
             l->setColour (juce::Label::textColourId, juce::Colours::white);
             l->setJustificationType (juce::Justification::centred);
-            l->setFont (juce::Font ("Segoe UI", 11.0f, juce::Font::bold));
+            l->setFont (juce::Font (juce::FontOptions ("Segoe UI", 11.0f, juce::Font::bold)));
             addAndMakeVisible (l);
             
             comboAttachments.add (new juce::AudioProcessorValueTreeState::ComboBoxAttachment (p.getAPVTS(), paramId, *c));
@@ -90,7 +90,7 @@ public:
         guiSizeLabel.setText ("GUI Size", juce::dontSendNotification);
         guiSizeLabel.setColour (juce::Label::textColourId, juce::Colours::white);
         guiSizeLabel.setJustificationType (juce::Justification::centred);
-        guiSizeLabel.setFont (juce::Font ("Segoe UI", 11.0f, juce::Font::bold));
+        guiSizeLabel.setFont (juce::Font (juce::FontOptions ("Segoe UI", 11.0f, juce::Font::bold)));
         addAndMakeVisible (guiSizeLabel);
 
         guiSizeCombo.addItemList ({ "75%", "100%", "125%", "150%", "200%", "Custom" }, 1);
@@ -113,7 +113,7 @@ public:
         editorModeLabel.setText ("Editor Mode", juce::dontSendNotification);
         editorModeLabel.setColour (juce::Label::textColourId, juce::Colours::white);
         editorModeLabel.setJustificationType (juce::Justification::centred);
-        editorModeLabel.setFont (juce::Font ("Segoe UI", 11.0f, juce::Font::bold));
+        editorModeLabel.setFont (juce::Font (juce::FontOptions ("Segoe UI", 11.0f, juce::Font::bold)));
         addAndMakeVisible (editorModeLabel);
 
         editorModeCombo.addItemList ({ "USB MIDI + Audio", "USB MIDI Only", "DIN MIDI" }, 1);
@@ -136,7 +136,7 @@ public:
         midiInLabel.setText ("MIDI In Port", juce::dontSendNotification);
         midiInLabel.setColour (juce::Label::textColourId, juce::Colours::white);
         midiInLabel.setJustificationType (juce::Justification::centred);
-        midiInLabel.setFont (juce::Font ("Segoe UI", 11.0f, juce::Font::bold));
+        midiInLabel.setFont (juce::Font (juce::FontOptions ("Segoe UI", 11.0f, juce::Font::bold)));
         addChildComponent (midiInLabel);
 
         midiInCombo.setColour (juce::ComboBox::backgroundColourId, juce::Colour (0xff2e333d));
@@ -148,7 +148,7 @@ public:
         midiOutLabel.setText ("MIDI Out Port", juce::dontSendNotification);
         midiOutLabel.setColour (juce::Label::textColourId, juce::Colours::white);
         midiOutLabel.setJustificationType (juce::Justification::centred);
-        midiOutLabel.setFont (juce::Font ("Segoe UI", 11.0f, juce::Font::bold));
+        midiOutLabel.setFont (juce::Font (juce::FontOptions ("Segoe UI", 11.0f, juce::Font::bold)));
         addChildComponent (midiOutLabel);
 
         midiOutCombo.setColour (juce::ComboBox::backgroundColourId, juce::Colour (0xff2e333d));
@@ -339,7 +339,7 @@ public:
             l->setText (name, juce::dontSendNotification);
             l->setColour (juce::Label::textColourId, juce::Colours::white);
             l->setJustificationType (juce::Justification::centred);
-            l->setFont (juce::Font ("Segoe UI", 11.0f, juce::Font::bold));
+            l->setFont (juce::Font (juce::FontOptions ("Segoe UI", 11.0f, juce::Font::bold)));
             addAndMakeVisible (l);
             
             sliderAttachments.add (new juce::AudioProcessorValueTreeState::SliderAttachment (p.getAPVTS(), paramId, *s));
@@ -360,7 +360,7 @@ public:
             l->setText (name, juce::dontSendNotification);
             l->setColour (juce::Label::textColourId, juce::Colours::white);
             l->setJustificationType (juce::Justification::centred);
-            l->setFont (juce::Font ("Segoe UI", 11.0f, juce::Font::bold));
+            l->setFont (juce::Font (juce::FontOptions ("Segoe UI", 11.0f, juce::Font::bold)));
             addAndMakeVisible (l);
             
             comboAttachments.add (new juce::AudioProcessorValueTreeState::ComboBoxAttachment (p.getAPVTS(), paramId, *c));
@@ -454,7 +454,7 @@ public:
             l->setText (name, juce::dontSendNotification);
             l->setColour (juce::Label::textColourId, juce::Colours::white);
             l->setJustificationType (juce::Justification::centred);
-            l->setFont (juce::Font ("Segoe UI", 11.0f, juce::Font::bold));
+            l->setFont (juce::Font (juce::FontOptions ("Segoe UI", 11.0f, juce::Font::bold)));
             addAndMakeVisible (l);
             
             sliderAttachments.add (new juce::AudioProcessorValueTreeState::SliderAttachment (p.getAPVTS(), paramId, *s));
@@ -476,7 +476,7 @@ public:
             l->setText (name, juce::dontSendNotification);
             l->setColour (juce::Label::textColourId, juce::Colours::white);
             l->setJustificationType (juce::Justification::centred);
-            l->setFont (juce::Font ("Segoe UI", 11.0f, juce::Font::bold));
+            l->setFont (juce::Font (juce::FontOptions ("Segoe UI", 11.0f, juce::Font::bold)));
             addAndMakeVisible (l);
             
             comboAttachments.add (new juce::AudioProcessorValueTreeState::ComboBoxAttachment (p.getAPVTS(), paramId, *c));
@@ -546,19 +546,19 @@ SH201AudioProcessorEditor::SH201AudioProcessorEditor (SH201AudioProcessor& p)
 
     // --- Header Title ---
     titleLabel.setText ("ROLAND SH-201", juce::dontSendNotification);
-    titleLabel.setFont (juce::Font ("Segoe UI", 22.0f, juce::Font::bold));
+    titleLabel.setFont (juce::Font (juce::FontOptions ("Segoe UI", 22.0f, juce::Font::bold)));
     titleLabel.setColour (juce::Label::textColourId, juce::Colour (0xff111111));
     titleLabel.setJustificationType (juce::Justification::centred);
     addAndMakeVisible (titleLabel);
 
     subtitleLabel.setText ("EDITOR VST v1.2.1", juce::dontSendNotification);
-    subtitleLabel.setFont (juce::Font ("Segoe UI", 11.0f, juce::Font::bold));
+    subtitleLabel.setFont (juce::Font (juce::FontOptions ("Segoe UI", 11.0f, juce::Font::bold)));
     subtitleLabel.setColour (juce::Label::textColourId, juce::Colour (0xff8a93a0));
     subtitleLabel.setJustificationType (juce::Justification::centredLeft);
     addAndMakeVisible (subtitleLabel);
 
     // --- Status Label ---
-    statusLabel.setFont (juce::Font ("Segoe UI", 12.0f, juce::Font::bold));
+    statusLabel.setFont (juce::Font (juce::FontOptions ("Segoe UI", 12.0f, juce::Font::bold)));
     statusLabel.setJustificationType (juce::Justification::centred);
     addAndMakeVisible (statusLabel);
 
@@ -599,7 +599,7 @@ SH201AudioProcessorEditor::SH201AudioProcessorEditor (SH201AudioProcessor& p)
     addChildComponent (patchBrowser.get());
 
     // --- Footer Label ---
-    lastReceivedLabel.setFont (juce::Font ("Segoe UI", 12.0f, juce::Font::bold));
+    lastReceivedLabel.setFont (juce::Font (juce::FontOptions ("Segoe UI", 12.0f, juce::Font::bold)));
     lastReceivedLabel.setColour (juce::Label::textColourId, juce::Colours::white);
     lastReceivedLabel.setJustificationType (juce::Justification::centred);
     addAndMakeVisible (lastReceivedLabel);
@@ -1107,7 +1107,7 @@ void SH201AudioProcessorEditor::styleRotarySlider (juce::Slider& slider, juce::L
     addAndMakeVisible (slider);
 
     label.setText (name, juce::dontSendNotification);
-    label.setFont (juce::Font ("Segoe UI", 12.0f, juce::Font::bold));
+    label.setFont (juce::Font (juce::FontOptions ("Segoe UI", 12.0f, juce::Font::bold)));
     label.setColour (juce::Label::textColourId, isSilver ? juce::Colours::black : juce::Colours::white);
     label.setJustificationType (juce::Justification::centred);
     addAndMakeVisible (label);
@@ -1129,7 +1129,7 @@ void SH201AudioProcessorEditor::styleLinearSlider (juce::Slider& slider, juce::L
     addAndMakeVisible (slider);
 
     label.setText (name, juce::dontSendNotification);
-    label.setFont (juce::Font ("Segoe UI", 12.0f, juce::Font::bold));
+    label.setFont (juce::Font (juce::FontOptions ("Segoe UI", 12.0f, juce::Font::bold)));
     label.setColour (juce::Label::textColourId, isSilver ? juce::Colours::black : juce::Colours::white);
     label.setJustificationType (juce::Justification::centred);
     addAndMakeVisible (label);
@@ -1148,7 +1148,7 @@ void SH201AudioProcessorEditor::styleComboBox (juce::ComboBox& combo, juce::Labe
     addAndMakeVisible (combo);
 
     label.setText (name, juce::dontSendNotification);
-    label.setFont (juce::Font ("Segoe UI", 12.0f, juce::Font::bold));
+    label.setFont (juce::Font (juce::FontOptions ("Segoe UI", 12.0f, juce::Font::bold)));
     label.setColour (juce::Label::textColourId, isSilver ? juce::Colours::black : juce::Colours::white);
     label.setJustificationType (juce::Justification::centred);
     addAndMakeVisible (label);
@@ -1254,7 +1254,7 @@ void SH201AudioProcessorEditor::drawSectionFrame (juce::Graphics& g, juce::Recta
     float tabH = 28.0f; // Height of the file tab
     float tabSlope = 18.0f; // Sloped edge width
     
-    juce::Font titleFont ("Impact", 18.0f, juce::Font::plain);
+    juce::Font titleFont (juce::FontOptions ("Impact", 18.0f, juce::Font::plain));
     float textW = title.length() * 11.0f; // Heuristic for 18pt Impact uppercase font
     float tabW = textW + 24.0f; // Give padding around title
     
@@ -1306,7 +1306,7 @@ void SH201AudioProcessorEditor::drawSectionFrame (juce::Graphics& g, juce::Recta
     
     if (badgeText.isNotEmpty())
     {
-        g.setFont (juce::Font ("Segoe UI", 11.0f, juce::Font::plain));
+        g.setFont (juce::Font (juce::FontOptions ("Segoe UI", 11.0f, juce::Font::plain)));
         g.drawText (badgeText, (int)x, (int)y + (int)tabH + 2, (int)w - 12, 14, juce::Justification::topRight, false);
     }
 }
