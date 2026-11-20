@@ -226,22 +226,25 @@ juce::AudioProcessorValueTreeState::ParameterLayout SH201AudioProcessor::createP
             juce::ParameterID (id, 1), name, 0, 127, defVal));
     };
 
-    auto addSignedParam = [&layout] (const juce::String& id, const juce::String& name, int minVal, int maxVal, int defVal)
+    auto addSignedParam = [&layout] (const juce::String& id, const juce::String& name, int minVal, int maxVal, int defVal, bool isMeta = false)
     {
+        auto attrs = juce::AudioParameterIntAttributes().withMeta (isMeta);
         layout.add (std::make_unique<juce::AudioParameterInt> (
-            juce::ParameterID (id, 1), name, minVal, maxVal, defVal));
+            juce::ParameterID (id, 1), name, minVal, maxVal, defVal, attrs));
     };
 
-    auto addChoiceParam = [&layout] (const juce::String& id, const juce::String& name, const juce::StringArray& choices, int defVal)
+    auto addChoiceParam = [&layout] (const juce::String& id, const juce::String& name, const juce::StringArray& choices, int defVal, bool isMeta = false)
     {
+        auto attrs = juce::AudioParameterChoiceAttributes().withMeta (isMeta);
         layout.add (std::make_unique<juce::AudioParameterChoice> (
-            juce::ParameterID (id, 1), name, choices, defVal));
+            juce::ParameterID (id, 1), name, choices, defVal, attrs));
     };
 
-    auto addRangedIntParam = [&layout] (const juce::String& id, const juce::String& name, int minVal, int maxVal, int defVal)
+    auto addRangedIntParam = [&layout] (const juce::String& id, const juce::String& name, int minVal, int maxVal, int defVal, bool isMeta = false)
     {
+        auto attrs = juce::AudioParameterIntAttributes().withMeta (isMeta);
         layout.add (std::make_unique<juce::AudioParameterInt> (
-            juce::ParameterID (id, 1), name, minVal, maxVal, defVal));
+            juce::ParameterID (id, 1), name, minVal, maxVal, defVal, attrs));
     };
 
     // Helper to add all 48 Tone Parameters for either Upper Tone or Lower Tone
@@ -249,7 +252,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout SH201AudioProcessor::createP
     {
         // --- Oscillator 1 ---
         addChoiceParam (prefix + "osc1_wave", dispPrefix + "Osc 1 Waveform", { "Saw", "Square", "PW-Square", "Triangle", "Sine", "Noise", "Feedback", "Supersaw", "External" }, 0);
-        addChoiceParam (prefix + "osc1_pitch_wide", dispPrefix + "Osc 1 Pitch Wide", { "OFF", "ON" }, 0);
+        addChoiceParam (prefix + "osc1_pitch_wide", dispPrefix + "Osc 1 Pitch Wide", { "OFF", "ON" }, 0, true);
         addSignedParam (prefix + "osc1_pitch", dispPrefix + "Osc 1 Coarse Tune", -36, 36, 0); // Corrected PDF range (-36 to +36 semitones)
         addSignedParam (prefix + "osc1_fine_tune", dispPrefix + "Osc 1 Fine Tune", -50, 50, 0);
         addIntParam    (prefix + "osc1_pulse_width", dispPrefix + "Osc 1 Pulse Width", 64);
@@ -257,7 +260,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout SH201AudioProcessor::createP
 
         // --- Oscillator 2 ---
         addChoiceParam (prefix + "osc2_wave", dispPrefix + "Osc 2 Waveform", { "Saw", "Square", "PW-Square", "Triangle", "Sine", "Noise", "Feedback", "Supersaw", "External" }, 0);
-        addChoiceParam (prefix + "osc2_pitch_wide", dispPrefix + "Osc 2 Pitch Wide", { "OFF", "ON" }, 0);
+        addChoiceParam (prefix + "osc2_pitch_wide", dispPrefix + "Osc 2 Pitch Wide", { "OFF", "ON" }, 0, true);
         addSignedParam (prefix + "osc2_pitch", dispPrefix + "Osc 2 Coarse Tune", -36, 36, 0); // Corrected PDF range (-36 to +36 semitones)
         addSignedParam (prefix + "osc2_detune", dispPrefix + "Osc 2 Fine Tune", -50, 50, 0);
         addIntParam    (prefix + "osc2_pulse_width", dispPrefix + "Osc 2 Pulse Width", 64);
@@ -344,21 +347,21 @@ juce::AudioProcessorValueTreeState::ParameterLayout SH201AudioProcessor::createP
     addChoiceParam ("common_mono_solo_select", "Mono/Solo Select", { "POLY", "SOLO+L", "SOLO" }, 0);
 
     // --- Stereo Mode / Roland SH-201 Editor Features ---
-    addChoiceParam ("common_stereo_mode", "Stereo Mode", { "OFF", "ON" }, 0);
-    addSignedParam ("common_stereo_width", "Stereo Width", 0, 100, 100);
-    addChoiceParam ("common_stereo_link_mode", "Param Link Mode", { "LINK ALL", "EXCLUDE OSC" }, 0);
+    addChoiceParam ("common_stereo_mode", "Stereo Mode", { "OFF", "ON" }, 0, true);
+    addSignedParam ("common_stereo_width", "Stereo Width", 0, 100, 100, true);
+    addChoiceParam ("common_stereo_link_mode", "Param Link Mode", { "LINK ALL", "EXCLUDE OSC" }, 0, true);
 
     // --- Panel Links ---
-    addChoiceParam ("link_osc1", "Link OSC 1", { "OFF", "ON" }, 0);
-    addChoiceParam ("link_osc2", "Link OSC 2", { "OFF", "ON" }, 0);
-    addChoiceParam ("link_mix_mod", "Link Mix/Mod", { "OFF", "ON" }, 0);
-    addChoiceParam ("link_pitch_env", "Link Pitch Env", { "OFF", "ON" }, 0);
-    addChoiceParam ("link_filter", "Link Filter", { "OFF", "ON" }, 0);
-    addChoiceParam ("link_filter_env", "Link Filter Env", { "OFF", "ON" }, 0);
-    addChoiceParam ("link_amp_env", "Link Amp Env", { "OFF", "ON" }, 0);
-    addChoiceParam ("link_amp", "Link Amp", { "OFF", "ON" }, 0);
-    addChoiceParam ("link_lfo1", "Link LFO 1", { "OFF", "ON" }, 0);
-    addChoiceParam ("link_lfo2", "Link LFO 2", { "OFF", "ON" }, 0);
+    addChoiceParam ("link_osc1", "Link OSC 1", { "OFF", "ON" }, 0, true);
+    addChoiceParam ("link_osc2", "Link OSC 2", { "OFF", "ON" }, 0, true);
+    addChoiceParam ("link_mix_mod", "Link Mix/Mod", { "OFF", "ON" }, 0, true);
+    addChoiceParam ("link_pitch_env", "Link Pitch Env", { "OFF", "ON" }, 0, true);
+    addChoiceParam ("link_filter", "Link Filter", { "OFF", "ON" }, 0, true);
+    addChoiceParam ("link_filter_env", "Link Filter Env", { "OFF", "ON" }, 0, true);
+    addChoiceParam ("link_amp_env", "Link Amp Env", { "OFF", "ON" }, 0, true);
+    addChoiceParam ("link_amp", "Link Amp", { "OFF", "ON" }, 0, true);
+    addChoiceParam ("link_lfo1", "Link LFO 1", { "OFF", "ON" }, 0, true);
+    addChoiceParam ("link_lfo2", "Link LFO 2", { "OFF", "ON" }, 0, true);
 
     // --- Actual Patch Common ---
     addRangedIntParam ("common_patch_level", "Patch Level", 0, 127, 127);
