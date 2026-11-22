@@ -65,7 +65,9 @@ public:
         else
             g.setColour (juce::Colour (0xffcccccc));
 
-        g.setFont (juce::Font ("Segoe UI", (float) height * 0.70f, isItemSelected ? juce::Font::bold : juce::Font::plain));
+        g.setFont (juce::FontOptions().withName ("Segoe UI")
+                                      .withHeight ((float) height * 0.70f)
+                                      .withStyle (isItemSelected ? "Bold" : "Regular"));
 
         if (width > 350 && ! isDirectory)
         {
@@ -74,7 +76,8 @@ public:
 
             g.drawFittedText (filename, x, 0, sizeX - x, height, juce::Justification::centredLeft, 1);
 
-            g.setFont (juce::Font ("Segoe UI", (float) height * 0.55f, juce::Font::plain));
+            g.setFont (juce::FontOptions().withName ("Segoe UI")
+                                          .withHeight ((float) height * 0.55f));
             g.setColour (juce::Colour (0xff888888));
             g.drawFittedText (fileSizeDescription, sizeX, 0, dateX - sizeX, height, juce::Justification::centredLeft, 1);
             g.drawFittedText (fileTimeDescription, dateX, 0, width - dateX - 6, height, juce::Justification::centredLeft, 1);

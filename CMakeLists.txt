@@ -1,4 +1,5 @@
 cmake_minimum_required(VERSION 3.22)
+set(CMAKE_OSX_DEPLOYMENT_TARGET "10.13" CACHE STRING "Minimum macOS deployment target")
 project(SH201Editor VERSION 1.2.1)
 
 set(CMAKE_CXX_STANDARD 20)
@@ -12,12 +13,26 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(JUCE)
 
-# Setup libusb from third_party
-set(LIBUSB_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/third_party/libusb/include")
-if(CMAKE_SIZEOF_VOID_P EQUAL 8)
-    set(LIBUSB_LIBRARY "${CMAKE_CURRENT_SOURCE_DIR}/third_party/libusb/VS2019/MS64/static/libusb-1.0.lib")
+# Setup libusb
+if(WIN32)
+    set(LIBUSB_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/third_party/libusb/include")
+
+    if(CMAKE_SIZEOF_VOID_P EQUAL 8)
+        set(LIBUSB_LIBRARY "${CMAKE_CURRENT_SOURCE_DIR}/third_party/libusb/VS2019/MS64/static/libusb-1.0.lib")
+    else()
+        set(LIBUSB_LIBRARY "${CMAKE_CURRENT_SOURCE_DIR}/third_party/libusb/VS2019/MS32/static/libusb-1.0.lib")
+    endif()
+
+elseif(APPLE)
+    set(LIBUSB_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/libusb-10.13/include/libusb-1.0")
+    set(LIBUSB_LIBRARY "${CMAKE_CURRENT_SOURCE_DIR}/libusb-10.13/lib/libusb-1.0.0.dylib")
+endif()
+
+# Plugin formats
+if(APPLE)
+    set(PLUGIN_FORMATS AU VST3 Standalone)
 else()
-    set(LIBUSB_LIBRARY "${CMAKE_CURRENT_SOURCE_DIR}/third_party/libusb/VS2019/MS32/static/libusb-1.0.lib")
+    set(PLUGIN_FORMATS VST3 Standalone)
 endif()
 
 juce_add_plugin(SH201Editor
@@ -32,7 +47,7 @@ juce_add_plugin(SH201Editor
     COPY_PLUGIN_AFTER_BUILD FALSE
     PLUGIN_MANUFACTURER_CODE Rold
     PLUGIN_CODE S201
-    FORMATS VST3 Standalone
+    FORMATS ${PLUGIN_FORMATS}
     PRODUCT_NAME "Roland SH-201 Editor"
 )
 
@@ -68,12 +83,16 @@ target_include_directories(SH201Editor
 
 target_compile_definitions(SH201Editor
     PUBLIC
-        NOMINMAX
-        WIN32_LEAN_AND_MEAN
         JUCE_WEB_BROWSER=0
         JUCE_USE_CURL=0
         JUCE_VST3_CAN_REPLACE_VST2=0
 )
+
+if(WIN32)
+    target_compile_definitions(SH201Editor
+        PUBLIC NOMINMAX WIN32_LEAN_AND_MEAN
+    )
+endif()
 
 target_link_libraries(SH201Editor
     PRIVATE
@@ -82,9 +101,51 @@ target_link_libraries(SH201Editor
         juce::juce_audio_processors
         juce::juce_gui_basics
         juce::juce_gui_extra
-        ${LIBUSB_LIBRARY}
-        setupapi
-        advapi32
-        user32
         SH201Assets
 )
+
+if(WIN32)
+    target_link_libraries(SH201Editor
+        PRIVATE
+            ${LIBUSB_LIBRARY}
+            setupapi
+            advapi32
+            user32
+    )
+elseif(APPLE)
+    target_link_libraries(SH201Editor
+        PRIVATE
+            ${LIBUSB_LIBRARY}
+    )
+endif()
+
+if(APPLE)
+    # Bundle libusb inside each macOS app/plugin.
+    foreach(PLUGIN_TARGET IN ITEMS
+        SH201Editor_Standalone
+        SH201Editor_AU
+        SH201Editor_VST3
+    )
+        # Configure the runtime library search path.
+	set_target_properties(${PLUGIN_TARGET} PROPERTIES
+	    BUILD_WITH_INSTALL_RPATH TRUE
+    	    INSTALL_RPATH "@loader_path/../Frameworks"
+    	    INSTALL_RPATH_USE_LINK_PATH FALSE
+	)
+
+        # Copy and sign libusb after building.
+        add_custom_command(TARGET ${PLUGIN_TARGET} POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E make_directory
+                "$<TARGET_BUNDLE_DIR:${PLUGIN_TARGET}>/Contents/Frameworks"
+
+            COMMAND ${CMAKE_COMMAND} -E copy_if_different
+                "${LIBUSB_LIBRARY}"
+                "$<TARGET_BUNDLE_DIR:${PLUGIN_TARGET}>/Contents/Frameworks/libusb-1.0.0.dylib"
+
+            COMMAND /usr/bin/codesign --force --sign -
+                "$<TARGET_BUNDLE_DIR:${PLUGIN_TARGET}>/Contents/Frameworks/libusb-1.0.0.dylib"
+
+            VERBATIM
+        )
+    endforeach()
+endif()
