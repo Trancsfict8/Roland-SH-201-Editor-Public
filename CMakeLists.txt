@@ -1,4 +1,5 @@
 cmake_minimum_required(VERSION 3.22)
+set(CMAKE_OSX_DEPLOYMENT_TARGET "10.13" CACHE STRING "Minimum macOS deployment target")
 project(SH201Editor VERSION 1.2.1)
 
 set(CMAKE_CXX_STANDARD 20)
@@ -23,8 +24,8 @@ if(WIN32)
     endif()
 
 elseif(APPLE)
-    find_package(PkgConfig REQUIRED)
-    pkg_check_modules(LIBUSB REQUIRED IMPORTED_TARGET libusb-1.0)
+    set(LIBUSB_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/libusb-10.13/include/libusb-1.0")
+    set(LIBUSB_LIBRARY "${CMAKE_CURRENT_SOURCE_DIR}/libusb-10.13/lib/libusb-1.0.0.dylib")
 endif()
 
 # Plugin formats
@@ -114,6 +115,37 @@ if(WIN32)
 elseif(APPLE)
     target_link_libraries(SH201Editor
         PRIVATE
-            PkgConfig::LIBUSB
+            ${LIBUSB_LIBRARY}
     )
+endif()
+
+if(APPLE)
+    # Bundle libusb inside each macOS app/plugin.
+    foreach(PLUGIN_TARGET IN ITEMS
+        SH201Editor_Standalone
+        SH201Editor_AU
+        SH201Editor_VST3
+    )
+        # Configure the runtime library search path.
+	set_target_properties(${PLUGIN_TARGET} PROPERTIES
+	    BUILD_WITH_INSTALL_RPATH TRUE
+    	    INSTALL_RPATH "@loader_path/../Frameworks"
+    	    INSTALL_RPATH_USE_LINK_PATH FALSE
+	)
+
+        # Copy and sign libusb after building.
+        add_custom_command(TARGET ${PLUGIN_TARGET} POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E make_directory
+                "$<TARGET_BUNDLE_DIR:${PLUGIN_TARGET}>/Contents/Frameworks"
+
+            COMMAND ${CMAKE_COMMAND} -E copy_if_different
+                "${LIBUSB_LIBRARY}"
+                "$<TARGET_BUNDLE_DIR:${PLUGIN_TARGET}>/Contents/Frameworks/libusb-1.0.0.dylib"
+
+            COMMAND /usr/bin/codesign --force --sign -
+                "$<TARGET_BUNDLE_DIR:${PLUGIN_TARGET}>/Contents/Frameworks/libusb-1.0.0.dylib"
+
+            VERBATIM
+        )
+    endforeach()
 endif()
