@@ -739,12 +739,32 @@ SH201AudioProcessorEditor::SH201AudioProcessorEditor (SH201AudioProcessor& p)
     addToneControls ("lower_");
 
     // --- STATIC COMMON / MASTER PARAMETERS ---
+    auto addPortamentoButton = [this] (const juce::String& paramId, const juce::String& text)
+    {
+        auto* btn = toggleButtons.add (new juce::TextButton());
+        auto* glow = toggleGlows.add (new juce::GlowEffect());
+        styleButton (*btn, juce::Colour (0xff4a525e));
+        btn->setButtonText (text);
+        btn->setClickingTogglesState (true);
+        btn->setColour (juce::TextButton::buttonOnColourId, juce::Colour (0xffe74c3c));
+        btn->setColour (juce::TextButton::textColourOnId, juce::Colours::white);
+        glow->setGlowProperties (3.0f, juce::Colour (0xffe74c3c).withAlpha (0.6f), juce::Point<int> (0, 0));
+        btn->onClick = [btn, glow] {
+            btn->setComponentEffect (btn->getToggleState() ? glow : nullptr);
+        };
+        addAndMakeVisible (btn);
+        toggleAttachments.add (new juce::AudioProcessorValueTreeState::ButtonAttachment (
+            audioProcessor.getAPVTS(), paramId, *btn));
+        buttonMap[paramId] = btn;
+        if (btn->getToggleState())
+            btn->setComponentEffect (glow);
+    };
+
     addComboBox     ("common_keyboard_mode", "KEY MODE", { "SINGLE", "DUAL", "SPLIT" });
     addRotarySlider ("common_tone_balance", "TONE BAL");
     addRotarySlider ("common_split_point", "SPLIT PT");
-
-    addComboBox     ("common_mono_solo_select", "VOICE", { "POLY", "SOLO+L", "SOLO" });
-    addComboBox     ("common_portamento_switch", "PORTA", { "OFF", "ON" });
+    addComboBox     ("common_mono_solo_select", "VOICE", { "POLY", "LEGATO", "SOLO" });
+    addPortamentoButton ("common_portamento_switch", "PORTAMENTO");
     addRotarySlider ("common_portamento_time", "TIME");
     addRotarySlider ("common_pitch_bend_range", "BEND");
     addRotarySlider ("common_octave_shift", "OCTAVE");
@@ -1595,11 +1615,13 @@ void SH201AudioProcessorEditor::resized()
         };
         
         juce::Rectangle<int> voiceCell = leftArea.removeFromTop (44);
-        leftArea.removeFromTop (6);
-        juce::Rectangle<int> portaCell = leftArea.removeFromTop (44);
+        leftArea.removeFromTop (14);
+        juce::Rectangle<int> portaCell = leftArea.removeFromTop (28);
 
         setCombo ("common_mono_solo_select", voiceCell);
-        setCombo ("common_portamento_switch", portaCell);
+
+        if (auto it = buttonMap.find ("common_portamento_switch"); it != buttonMap.end() && it->second != nullptr)
+            it->second->setBounds (portaCell.getCentreX() - comboW / 2, portaCell.getY(), comboW, 26);
 
         juce::StringArray knobIds = { "common_portamento_time", "common_pitch_bend_range", "common_octave_shift" };
         int cellW = box.getWidth() / 3;
